@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Map with Current Location and Destination</title>
+    <style>
+        #map {
+            height: 450px;
+            width: 100%;
+        }
+    </style>
+    <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY"></script>
+    <script>
+        function initMap() {
+            // Current location (example coordinates)
+            const currentLocation = { lat: 27.622805517490455, lng: 85.37939802924421 };
+            // Destination location (example coordinates)
+            const destinationLocation = { lat: 27.629, lng: 85.334 };
+
+            // Create a map centered at the current location
+            const map = new google.maps.Map(document.getElementById("map"), {
+                zoom: 14,
+                center: currentLocation,
+            });
+
+            // Add a marker for the current location
+            const currentMarker = new google.maps.Marker({
+                position: currentLocation,
+                map: map,
+                title: "Current Location",
+            });
+
+            // Add a marker for the destination
+            const destinationMarker = new google.maps.Marker({
+                position: destinationLocation,
+                map: map,
+                title: "Destination",
+            });
+
+            // Optionally, draw a route between the two locations
+            const directionsService = new google.maps.DirectionsService();
+            const directionsRenderer = new google.maps.DirectionsRenderer();
+            directionsRenderer.setMap(map);
+
+            const request = {
+                origin: currentLocation,
+                destination: destinationLocation,
+                travelMode: google.maps.TravelMode.BICYCLING,
+            };
+
+            directionsService.route(request, (result, status) => {
+                if (status === "OK") {
+                    directionsRenderer.setDirections(result);
+                }
+            });
+        }
+    </script>
+</head>
+<body onload="initMap()">
+    <h1>Bike Location Map</h1>
+    <div id="map"></div>
+</body>
+</html>
+
